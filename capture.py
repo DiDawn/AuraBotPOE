@@ -49,10 +49,23 @@ class WindowCapture:
         return img
 
     @staticmethod
-    def list_window_names():
-        def winEnumHandler(hwnd, ctx):
+    def print_window_names():
+        def win_enum_handler(hwnd, ctx):
             if win32gui.IsWindowVisible(hwnd):
                 print(hex(hwnd), win32gui.GetWindowText(hwnd))
 
-        print(win32gui.EnumWindows(winEnumHandler, None))
+        return win32gui.EnumWindows(win_enum_handler, None)
 
+    @staticmethod
+    def list_window_names():
+        window_names = []
+
+        def win_enum_handler(hwnd, ctx):
+            temp_window_names = []
+            if win32gui.IsWindowVisible(hwnd):
+                temp_window_names.append(win32gui.GetWindowText(hwnd))
+            if temp_window_names:
+                window_names.append(temp_window_names)
+
+        win32gui.EnumWindows(win_enum_handler, None)
+        return window_names

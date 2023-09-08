@@ -36,7 +36,10 @@ class Bot:
             raise Exception(f"Bar priority should be 'health' or 'shield' not: {bar_priority}")
 
         self.window_w, self.window_h = window_size
-        self.window_capture = WindowCapture(1920, 1080, "Path of Exile")
+        if "Path of Exile" in WindowCapture.list_window_names():
+            self.window_capture = WindowCapture(1920, 1080, "Path of Exile")
+        else:
+            raise Exception("Path of Exile is not running")
 
         match debug_mode:
             case Params.TEXT_ONLY:
@@ -138,4 +141,4 @@ class Bot:
                 avg_fps = (n_frames / elapsed_time)
                 n_frames += 1
 
-                print(f"Fps:{avg_fps}  |  Total loop time:{elapsed_time}  |  Detection time:{elapsed_detection_time}")
+                print(f"Fps:{avg_fps}  |  Total loop time:{elapsed_time}.2f  |  Detection time:{elapsed_detection_time}")

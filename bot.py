@@ -2,9 +2,10 @@ from capture import WindowCapture
 from detection import Detection
 import cv2
 from time import time
-import pyautogui
 from PIL import Image
 import os
+import time
+import ctypes
 
 
 class Params:
@@ -20,17 +21,25 @@ class Bot:
                  debug_mode: str | None = None, bar_priority: str = 'health',
                  health_threshold: int = 0.85, shield_threshold: int = 0.85):
         """
-        :param scale_factor:
-        :param window_size:
-        :param grayscale:
-        :param debug_mode:
+        :param scale_factor: integer between 1 and 10. Will scale down the image by this factor.
+        :param window_size: size of the window to capture. Should be the same as the game window.
+        :param grayscale: If True, will convert the image to grayscale before searching for the health bar.
+        :param debug_mode: If provided, should be 'visual_only', 'text_only' or 'all'. Will define what is displayed.
         :param bar_priority: Should be 'health' or 'shield'. Will define which one is searched first.
+        :param health_threshold: Threshold of confidence for the health bar.
+        :param shield_threshold: Threshold of confidence for the shield bar.
         """
         self.debug_mode = debug_mode
+        if debug_mode is not None:
+            if debug_mode != Params.VISUAL_ONLY and debug_mode != Params.TEXT_ONLY and debug_mode != Params.ALL:
+                raise Exception(f"Debug mode should be 'visual_only', 'text_only' or 'all'. Not: {debug_mode}")
+
         self.scale_factor = scale_factor
         if not (1 <= self.scale_factor <= 10):
             raise Exception(f"scale factor needs to be between 1 and 10. Current scale factor : {self.scale_factor}")
+
         self.gray_scale = grayscale
+
         self.bar_priority = bar_priority
         if self.bar_priority != "health" and self.bar_priority != "shield":
             raise Exception(f"Bar priority should be 'health' or 'shield' not: {bar_priority}")
@@ -94,6 +103,16 @@ class Bot:
 
         return sorted_matches
 
+    @staticmethod
+    def click(x, y):
+        # move to position
+        x = int(65536 * x / ctypes.windll.user32.GetSystemMetrics(0) + 1)
+        y = int(65536 * y / ctypes.windll.user32.GetSystemMetrics(1) + 1)
+        ctypes.windll.user32.mouse_event(0x0001 + 0x8000, x, y, 0, 0)
+
+        # click
+        ctypes.windll.user32.mouse_event(0x0002 + 0x0004, 0, 0, 0, 0)
+
     def main_loop(self):
         n_frames = 1
         total_time0 = time()
@@ -126,7 +145,7 @@ class Bot:
             if len(matches) > 0:
                 x, y = matches[0][0], matches[0][1]
                 # print(x, y)
-                pyautogui.click(x * self.scale_factor, y * self.scale_factor)
+                self.click(x * self.scale_factor, y * self.scale_factor)
 
                 if self.debug_mode == Params.VISUAL_ONLY or self.debug_mode == Params.ALL:
                     capture = Detection.draw_cross(capture, x, y)
@@ -141,4 +160,4 @@ class Bot:
                 avg_fps = (n_frames / elapsed_time)
                 n_frames += 1
 
-                print(f"Fps:{avg_fps}  |  Total loop time:{elapsed_time}.2f  |  Detection time:{elapsed_detection_time}")
+                print(f"Fps:{avg_fps} | Total loop time:{elapsed_time}.2f | Detection time:{elapsed_detection_time}")

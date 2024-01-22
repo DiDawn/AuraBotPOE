@@ -3,27 +3,35 @@ import numpy as np
 
 
 class Detection:
-    def __init__(self):
-        pass
+    def __init__(self, detection_method, classifier_name: str = None):
+        self.detection_method = detection_method
+        if self.detection_method == "cascade":
+            self.classifier = cv2.CascadeClassifier(classifier_name)
 
-    @staticmethod
-    def find(haystack_img, needle_img, threshold: float):
+    def find(self, haystack_img, needle_img, threshold: float, force_template: bool = False):
         if not 0 < threshold <= 1:
             raise Exception(f'threshold:{threshold} should be between 0 and 1')
 
-        # run the OpenCV algorithm
+        if self.detection_method == "template":
+            return self.find_template(haystack_img, needle_img, threshold)
+
+        elif self.detection_method == "cascade" and not force_template:
+            return self.find_cascade(haystack_img)
+
+        else:
+            return self.find_template(haystack_img, needle_img, threshold)
+
+    @staticmethod
+    def find_template(haystack_img, needle_img, threshold: float):
         match_template_result = cv2.matchTemplate(haystack_img, needle_img, cv2.TM_CCOEFF_NORMED)
 
-        # threshold of confidence
         locations = np.where(match_template_result >= threshold)
 
-        # we can zip those into positions tuples to get the result like : [(x0,y0),(x1,y1), ..., (xn,yn)]
         locations = list(zip(*locations[::-1]))
 
         if not locations:
             return np.array([], dtype=np.int32).reshape(0, 4)
 
-        # first we need to create the list of [x, y, w, h] rectangles
         rectangles = []
         for loc in locations:
             shape = np.shape(needle_img)
@@ -35,6 +43,12 @@ class Detection:
 
         return rectangles
 
+    def find_cascade(self, haystack_img):
+        rectangles = self.classifier.detectMultiScale(haystack_img, scaleFactor=1.1, minNeighbors=3)
+        if len(rectangles) == 0:
+            return np.array([], dtype=np.int32).reshape(0, 4)
+        return rectangles
+
     @staticmethod
     def draw_rectangles(haystack_img, rectangles, rectangle_color=(0, 255, 0)):
 
@@ -42,7 +56,6 @@ class Detection:
         haystack_image_copy = haystack_img.copy()
 
         for (x, y, h, w) in rectangles:
-            # determine the box positions
             top_left = (x, y)
             bottom_right = (x + w, y + h)
             # draw the box

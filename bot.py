@@ -17,18 +17,26 @@ class Params:
 
 
 class Bot:
-    def __init__(self, scale_factor: int = 3, window_size: tuple[int, int] = (1920, 1080), grayscale: bool = False,
-                 debug_mode: str | None = None, bar_priority: str = 'health',
+    def __init__(self, detection_method, classifier_name, scale_factor: int = 3,
+                 window_size: tuple[int, int] = (1920, 1080),
+                 grayscale: bool = False, debug_mode: str | None = None, bar_priority: str = 'health',
                  health_threshold: int = 0.85, shield_threshold: int = 0.85):
         """
+        :param detection_method: Should be 'template' or 'cascade'. Will define the method used to detect the bar.
         :param scale_factor: integer between 1 and 10. Will scale down the image by this factor.
         :param window_size: size of the window to capture. Should be the same as the game window.
         :param grayscale: If True, will convert the image to grayscale before searching for the health bar.
         :param debug_mode: If provided, should be 'visual_only', 'text_only' or 'all'. Will define what is displayed.
         :param bar_priority: Should be 'health' or 'shield'. Will define which one is searched first.
-        :param health_threshold: Threshold of confidence for the health bar.
-        :param shield_threshold: Threshold of confidence for the shield bar.
+        :param health_threshold: Threshold of confidence for the health bar (only needed for 'template' method).
+        :param shield_threshold: Threshold of confidence for the shield bar (only needed for 'template' method).
         """
+        self.detection_method = detection_method
+        if detection_method != "template" and detection_method != "cascade":
+            raise Exception(f"detection_method should be 'template' or 'cascade'. Not: {detection_method}")
+        if detection_method == "cascade" and classifier_name is None:
+            raise Exception("classifier_name should be provided when using detection_method 'cascade'")
+
         self.debug_mode = debug_mode
         if debug_mode is not None:
             if debug_mode != Params.VISUAL_ONLY and debug_mode != Params.TEXT_ONLY and debug_mode != Params.ALL:
@@ -58,6 +66,8 @@ class Bot:
 
         self.health_bar, self.shield_bar = self.load_needle_images()
         self.health_threshold, self.shield_threshold = health_threshold, shield_threshold
+
+        self.detection = Detection(self.detection_method, classifier_name)
 
         self.running = False
 
@@ -114,29 +124,31 @@ class Bot:
         ctypes.windll.user32.mouse_event(0x0002 + 0x0004, 0, 0, 0, 0)
 
     def main_loop(self):
+        user32 = ctypes.windll.user32
         n_frames = 1
         total_time0 = time()
+        template_methode = self.detection_method == "template"
         while self.running:
 
-            if self.scale_factor != 1:
+            if self.scale_factor != 1 and template_methode:
                 capture = self.window_capture.scaled_capture(self.scale_factor)
             else:
                 capture = self.window_capture.capture()
 
             capture = Detection.convert2non_alpha(capture)
-            if self.gray_scale:
+            if self.gray_scale and template_methode:
                 capture = Detection.convert2grayscale(capture)
 
             detection_time0 = time()
             if self.bar_priority == Params.HEALTH:
-                matches = Detection.find(capture, self.health_bar, self.health_threshold)
+                matches = self.detection.find(capture, self.health_bar, self.health_threshold)
                 if len(matches) == 0:
-                    matches = Detection.find(capture, self.shield_bar, self.shield_threshold)
+                    matches = self.detection.find(capture, self.shield_bar, self.shield_threshold, True)
 
             else:
-                matches = Detection.find(capture, self.shield_bar, self.shield_threshold)
+                matches = self.detection.find(capture, self.shield_bar, self.shield_threshold, True)
                 if len(matches) == 0:
-                    matches = Detection.find(capture, self.health_bar, self.health_threshold)
+                    matches = self.detection.find(capture, self.health_bar, self.health_threshold)
             detection_time1 = time()
 
             if len(matches) > 0:
@@ -161,3 +173,6 @@ class Bot:
                 n_frames += 1
 
                 print(f"Fps:{avg_fps} | Total loop time:{elapsed_time}.2f | Detection time:{elapsed_detection_time}")
+
+            if user32.GetAsyncKeyState(0x51) & 0x8000:
+                self.stop()

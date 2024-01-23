@@ -78,7 +78,7 @@ you will either need to use another PC or a virtual machine to run Path of Exile
 Be sure to follow the instructions below on the machine where the bot will be run.
 
 ### Download python
-If you do not have python installed, you can download it [here](https://www.python.org/downloads/). 
+If you do not have python installed yet, you can download it [here](https://www.python.org/downloads/). 
 
 ### Download the project
 If you have git installed, you can clone the project by running the following command in your terminal:

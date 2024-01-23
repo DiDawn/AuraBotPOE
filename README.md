@@ -31,8 +31,8 @@ The term "aura" stend for a variety of buffs that enhance the stats of the entir
 basically turning them close to invincible and greatly boosting their damage.
 While the aura bot is has a very strong role in maximizing the team's potential,
 the gameplay experience can be monotonous and less engaging for the player controlling the aura bot.
-This is due to the fact that, as an aura bot, you aren't actively involved in direct combat. You are just
-standing there and buffing everyone near you without doing anything.
+This is due to the fact that, as an aura bot, you aren't actively involved in direct combat. Youre just
+standing there buffing everyone near you.
 
 ### Project Goal
 The goal of this project is to automate the gameplay experience of an aura bot,

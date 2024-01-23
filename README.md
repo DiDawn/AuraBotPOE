@@ -62,10 +62,20 @@ Alternatively, users can opt for template matching if they find the classifier n
 that this method is slower.
 
 #### What the bot is looking for
-The bot focuses on the player's health/shield bar for consistency as it is the only element that does not vary 
+The bot focuses on the player's health/shield bar for consistency as 
+it is the only element that does not vary 
 between players
 
-IMAGES TO ILLUSTRATE
+
+(bot pov)
+
+https://github.com/DiDawn/AuraBotPOE/assets/95550246/a0d21d3b-bf0f-486b-b3ba-5cfb0f7c8ea2
+
+(player pov)
+
+https://github.com/DiDawn/AuraBotPOE/assets/95550246/ae1c77ec-0336-4316-a1e0-682b98386aa3
+
+
 
 ## Installation
 ### Environment

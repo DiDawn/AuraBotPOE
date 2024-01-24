@@ -15,7 +15,7 @@
 </h3>
 
 <p align="center">
-    <img width="200" src="https://th.bing.com/th/id/OIP.svbfus_qB9vT1aQB-kXXWAHaF7?w=229&h=183&c=7&r=0&o=5&pid=1.7" alt="POE">
+    <img width="200" src="https://github.com/DiDawn/AuraBotPOE/assets/95550246/ce1fde18-0ccd-4259-a4d0-be880164e4a3" alt="POE logo">
 </p>
 In Path of Exile, players have the option to create a specialized character known as an "aura bot."
 The essence of an aura bot is to focus on building a full support character that doesn't engage in
@@ -23,7 +23,7 @@ direct combat. Instead, the aura bot's primary role is to empower allies by stac
 commonly referred to as "auras."
 
 <p align="center">
-<img width="400" src="https://cdn.discordapp.com/attachments/771179759299592232/1199371386104336425/Sans_titre.png" alt="POE">
+    <img width="400" src="https://github.com/DiDawn/AuraBotPOE/assets/95550246/622fd0d7-509b-4172-a39c-5a324bc782bc" alt="POE auras">
 </p>
 
 The term "aura" stend for a variety of buffs that enhance the stats of the entire team,

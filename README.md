@@ -112,7 +112,11 @@ To install the required dependencies, run the following command in your terminal
 
 ## Usage
 
-### Start the bot
+### In game settings
+
+To ensure the bot works properly, you will need to adjust some settings in game.
+To minimize the impact of rendering the game the bot as been trained on specific low video settings.
+You will need to set the following settings in game if you want the bot to work properly:
 
 
 

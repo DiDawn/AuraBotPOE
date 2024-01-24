@@ -9,7 +9,6 @@
 
 
 ## What it can do
-### Overview
 
 <h3 align="center">
     This project is inspired by the popular game, Path of Exile.
@@ -67,11 +66,20 @@ it is the only element that does not vary
 between players
 
 
-(bot pov)
+### Quick overview
+
+#### Bot POV
+
+Here you can see the prediction of the bot (standing in the middle).
+If you look closely you can see the green rectangle around the player's health bar.
+This is the area where the bot think the player's health bar is located.
 
 https://github.com/DiDawn/AuraBotPOE/assets/95550246/a0d21d3b-bf0f-486b-b3ba-5cfb0f7c8ea2
 
-(player pov)
+#### Player POV
+
+Here you can see the bot in action from the player's perspective.
+The player is the one in the middle. The bot is the one running around him.
 
 https://github.com/DiDawn/AuraBotPOE/assets/95550246/ae1c77ec-0336-4316-a1e0-682b98386aa3
 

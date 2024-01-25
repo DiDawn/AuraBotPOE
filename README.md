@@ -4,7 +4,6 @@
 - [What it can do](#what-it-can-do)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Train your own cascade classifier](#train-your-own-model)
 
 
 
@@ -51,8 +50,7 @@ Users have the flexibility to choose between two methods of detection based on t
 The bot can utilize a custom pre-trained cascade classifier.
 This method is the faster one but sometime can be inaccurate. The accuracy of the model strongly depend on
 the data-set used to train it. This one has been build with a couple of thousands images and is pretty accurate in 
-all type of scenarios. If you find it not accurate enough and find the template matching to slow
-you can try to [train your own classifier](#train-your-own-model)(Note that this process is very long). 
+all type of scenarios. 
 
 
 #### 2-Template Matching:
@@ -87,7 +85,7 @@ https://github.com/DiDawn/AuraBotPOE/assets/95550246/0aec11a0-c09d-4b5c-b7b9-e6b
 
 ## Installation
 ### Environment
-If your main account is an aura bot, and you are simply bored of manually following others, you can skip to [the next part](#download-python).
+If your main account is an aura bot, and you are simply bored by manually following others, you can skip to [the next part](#download-python).
 
 If you want to run the aura bot on another account to support you while you're playing,
 you will need to set up a new machine. Since you cannot run multiple instances of Steam on the same machine,
@@ -100,12 +98,14 @@ If you do not have python installed yet, you can download it [here](https://www.
 
 ### Download the project
 If you have git installed, you can clone the project by running the following command in your terminal:
+
 ```git clone https://github.com/DiDawn/AuraBotPOE.git```
 
 If you do not have git installed, you can download the project [here](https://github.com/DiDawn/AuraBotPOE/zipball/master/).
 
 ### Install the required dependencies
 To install the required dependencies, run the following command in your terminal:
+
 ```pip install -r requirements.txt```
 
 
@@ -116,8 +116,28 @@ To install the required dependencies, run the following command in your terminal
 
 To ensure the bot works properly, you will need to adjust some settings in game.
 To minimize the impact of rendering the game the bot as been trained on specific low video settings.
-You will need to set the following settings in game if you want the bot to work properly:
+You will need to set all video settings to minimum in game if you want the bot to work properly.
+You will also need to change the resolution to 800x600.
+Make sure to run the game on full screen
 
 
+### Start the bot
 
-## Train your own model
+To start the bot you will need to have Path of Exile running on your machine.
+
+Command to start the bot with default settings (make sure to past the full path of your file to replace "(path to the file)":
+
+````python (path to the file)\app.py --classifier_name cascade.xml````
+
+If you don't want to use the cascade classifier you can use this command instead:
+
+````python (path to the file)\app.py --method template````
+
+If you want to see custom settings you can type:
+
+````python (path to the file)\app.py -help````
+
+
+### Stop the bot
+
+To stop the bot press "q".

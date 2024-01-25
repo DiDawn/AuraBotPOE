@@ -25,11 +25,11 @@ commonly referred to as "auras."
     <img width="400" src="https://github.com/DiDawn/AuraBotPOE/assets/95550246/622fd0d7-509b-4172-a39c-5a324bc782bc" alt="POE auras">
 </p>
 
-The term "aura" stend for a variety of buffs that enhance the stats of the entire team,
+The term "aura" stands for a variety of buffs that enhance the statistics of the entire team,
 basically turning them close to invincible and greatly boosting their damage.
-While the aura bot is has a very strong role in maximizing the team's potential,
+While the aura bot has a very strong role in maximizing the team's potential,
 the gameplay experience can be monotonous and less engaging for the player controlling the aura bot.
-This is due to the fact that, as an aura bot, you aren't actively involved in direct combat. Youre just
+This is due to the fact that, as an aura bot, you aren't actively involved in direct combat. You're just
 standing there buffing everyone near you.
 
 ### Project Goal
@@ -37,17 +37,17 @@ The goal of this project is to automate the gameplay experience of an aura bot,
 allowing players to enjoy the benefits of all the buffs without the need for manual control.
 
 
-The bot will use image detection for automatic navigation his goal is pto follow the nearest person to stay by his side.
+The bot will use image detection for automatic navigation his goal is to follow the nearest person to stay by his side.
 
 
 ### Image detection
-To achieve automatic navigation, the bot rely on [OpenCV](https://opencv.org/).
+To achieve automatic navigation, the bot relies on [OpenCV](https://opencv.org/).
 Users have the flexibility to choose between two methods of detection based on their preference:
 
 #### 1-Custom Pre-trained Haar Cascade Classifier:
 
 The bot can utilize a custom pre-trained cascade classifier.
-This method is the faster one but sometime can be inaccurate. The accuracy of the model strongly depend on
+This method is the faster one but sometimes can be inaccurate. The accuracy of the model strongly depend on
 the data-set used to train it. This one has been build with a couple of thousands images and is pretty accurate in 
 all type of scenarios. However if you're not satisifed with his accuracy you can always switch to the second method:
 

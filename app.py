@@ -9,8 +9,8 @@ def main():
     'cascade' for Haar Cascade detection
     'template' for template matching detection
     If you use 'cascade', you need to provide a classifier_name
-    Default: 'template'"""
-    parser.add_argument("--detection_method", type=str, default="template", help=detection_method_help)
+    Default: 'classifier'"""
+    parser.add_argument("--detection_method", type=str, default="classifier", help=detection_method_help)
 
     classifier_name_help = """Classifier name to use if detection_method is 'cascade'.
     The name must refer to the name of the cascade classifier you want to use in the cascade folder."""

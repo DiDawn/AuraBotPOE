@@ -37,8 +37,7 @@ The goal of this project is to automate the gameplay experience of an aura bot,
 allowing players to enjoy the benefits of all the buffs without the need for manual control.
 
 
-The bot will employs image detection for automatic navigation. It will follow the nearest person constantly
-trying stand by his side.
+The bot will use image detection for automatic navigation his goal is pto follow the nearest person to stay by his side.
 
 
 ### Image detection
@@ -50,7 +49,7 @@ Users have the flexibility to choose between two methods of detection based on t
 The bot can utilize a custom pre-trained cascade classifier.
 This method is the faster one but sometime can be inaccurate. The accuracy of the model strongly depend on
 the data-set used to train it. This one has been build with a couple of thousands images and is pretty accurate in 
-all type of scenarios. 
+all type of scenarios. However if you're not satisifed with his accuracy you can always switch to the second method:
 
 
 #### 2-Template Matching:

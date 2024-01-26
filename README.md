@@ -139,4 +139,6 @@ If you want to see custom settings you can type:
 
 ### Stop the bot
 
-To stop the bot press "q".
+-To stop the bot press "q".
+
+-To pause the bot press "p".

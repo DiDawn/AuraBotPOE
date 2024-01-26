@@ -37,7 +37,6 @@ def main():
     shield_threshold_help = "Threshold of confidence for the shield bar. Default: 0.85."
     parser.add_argument("--shield_threshold", type=float, default=0.85, help=shield_threshold_help)
 
-
     args = parser.parse_args()
 
     bot = Bot(args.detection_method, args.classifier_name, args.scale_factor, args.window_size, args.grayscale,

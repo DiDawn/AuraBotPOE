@@ -6,6 +6,7 @@ from PIL import Image
 import os
 import time
 import ctypes
+from threading import Thread
 
 
 class Params:
@@ -71,6 +72,8 @@ class Bot:
 
         self.running = False
 
+        self.user32 = ctypes.windll.user32
+
     def load_needle_images(self):
         images = os.listdir('Images/')
         if f"health_bar_d{self.scale_factor}.png" in images:
@@ -98,10 +101,22 @@ class Bot:
         self.running = True
         self.main_loop()
 
+    def pause(self):
+        if self.running:
+            self.running = False
+            while not self.is_key_pressed(0x50):
+                time.sleep(0.1)
+        else:
+            self.running = True
+            self.main_loop()
+
     def stop(self):
         self.running = False
 
     def sort_matches(self, matches):
+        """
+        Sort the matches to be sure that the bot doesn't click on the ATH
+        """
         sorted_matches = []
         d = self.scale_factor
         # print(rectangles)
@@ -113,25 +128,55 @@ class Bot:
 
         return sorted_matches
 
-    @staticmethod
-    def click(x, y):
+    def move_mouse(self, x, y):
         # move to position
         x = int(65536 * x / ctypes.windll.user32.GetSystemMetrics(0) + 1)
         y = int(65536 * y / ctypes.windll.user32.GetSystemMetrics(1) + 1)
-        ctypes.windll.user32.mouse_event(0x0001 + 0x8000, x, y, 0, 0)
+        self.user32.mouse_event(0x0001 + 0x8000, x, y, 0, 0)
 
-        # click
-        ctypes.windll.user32.mouse_event(0x0002 + 0x0004, 0, 0, 0, 0)
+    def click(self):
+        self.user32.mouse_event(0x0002 + 0x0004, 0, 0, 0, 0)
+
+    def move_click(self, x, y):
+        self.move_mouse(x, y)
+        self.click()
+
+    def hold_click(self):
+        self.user32.mouse_event(0x0002, 0, 0, 0, 0)
+
+    def release_click(self):
+        self.user32.mouse_event(0x0004, 0, 0, 0, 0)
+
+    def click_loop(self):
+        """
+        As the game only allow around 10 clicks per second, we need to hold the mouse button for a short time
+        to continue moving the character without performing too many clicks.
+        """
+        while self.running:
+            self.click()
+            self.hold_click()
+            time.sleep(0.5)
+            self.release_click()
+
+    def is_key_pressed(self, key: int):
+        """
+        :param key: vk code of the key as defined here:
+         https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+        """
+        return self.user32.GetAsyncKeyState(key) & 0x8000
 
     def main_loop(self):
-        user32 = ctypes.windll.user32
         n_frames = 1
         total_time0 = time()
         template_methode = self.detection_method == "template"
+        # start click loop thread
+        click_loop_thread = Thread(target=self.click_loop)
+        click_loop_thread.start()
         while self.running:
 
             if self.scale_factor != 1 and template_methode:
                 capture = self.window_capture.scaled_capture(self.scale_factor)
+            # as the cascade classifier has been trained on non-scaled images, we must not scale the image
             else:
                 capture = self.window_capture.capture()
 
@@ -157,7 +202,7 @@ class Bot:
             if len(matches) > 0:
                 x, y = matches[0][0], matches[0][1]
                 # print(x, y)
-                self.click(x * self.scale_factor, y * self.scale_factor)
+                self.move_click(x * self.scale_factor, y * self.scale_factor)
 
                 if self.debug_mode == Params.VISUAL_ONLY or self.debug_mode == Params.ALL:
                     capture = Detection.draw_cross(capture, x, y)
@@ -174,5 +219,8 @@ class Bot:
 
                 print(f"Fps:{avg_fps} | Total loop time:{elapsed_time}.2f | Detection time:{elapsed_detection_time}")
 
-            if user32.GetAsyncKeyState(0x51) & 0x8000:
+            if self.is_key_pressed(0x51):
                 self.stop()
+
+            if self.is_key_pressed(0x50):
+                self.pause()

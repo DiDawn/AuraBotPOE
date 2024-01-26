@@ -137,6 +137,8 @@ If you want to see custom settings you can type:
 ````python (path to the file)\app.py -help````
 
 
-### Stop the bot
+### Command
 
-To stop the bot press "q".
+-To stop the bot press "q".
+
+-To pause the bot press "p".
